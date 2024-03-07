@@ -13,6 +13,14 @@ or a Joint account with a spouse, for example). Administrators can view, create,
 delete, and update accounts of customers. All data should be stored in a MySQL
 database and the program is a console application (not a web app).
 
+
+
+<video src="./demo.mp4"></video>
+
+
+
+
+
 ### ATM System Use Case Diagrams
 
 ![image-20240306194704161](./user_case.png)
