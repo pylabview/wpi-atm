@@ -1,0 +1,4 @@
+-- select users.holder, accounts.id as Account_Number
+-- from users
+-- join accounts  on users.id = accounts.user_id
+-- where users.id = 3;
