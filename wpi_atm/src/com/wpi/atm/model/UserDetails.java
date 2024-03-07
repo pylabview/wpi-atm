@@ -90,8 +90,8 @@ public class UserDetails {
         return userList;
     }
 
-     public static boolean addUserToDatabase(String holder, String userLoginPin, String userLogin, int balance) {
-
+     public static boolean addUserToDatabase(String holder, String userLoginPin, String userLogin, double balance, int status) {
+        int accountId;
         try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
              Statement stmt = conn.createStatement()) {
 
@@ -115,9 +115,26 @@ public class UserDetails {
             // Execute SQL query to insert user account
             String insertAccountQuery = "INSERT INTO accounts (user_id, balance, active) " +
                     "VALUES (" + userId + ", balance, 1);";
-            stmt.executeUpdate(insertAccountQuery);
+            // Create a PreparedStatement with the INSERT query and specify that you want to retrieve generated keys
+            PreparedStatement stmt1 = conn.prepareStatement(insertAccountQuery, Statement.RETURN_GENERATED_KEYS);
 
-            System.out.println("New user added successfully.");
+            // Execute the INSERT query
+            int affectedRows = stmt1.executeUpdate();
+
+            // Check if the insertion was successful
+            if (affectedRows == 1) {
+                // Retrieve the generated keys
+                ResultSet rs1 = stmt1.getGeneratedKeys();
+                if (rs1.next()) {
+                    accountId = rs1.getInt(1); // Retrieve the generated account ID
+                    System.out.println("\"Account Successfully Created – the account number assigned is: " + accountId);
+                } else {
+                    System.out.println("Failed to retrieve the generated account ID.");
+                }
+            } else {
+                System.out.println("Failed to create a new account.");
+            }
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,6 +156,7 @@ public class UserDetails {
                 System.out.println("User with ID " + userId + " does not exist.");
             } else {
                 System.out.println("User with ID " + userId + " deleted successfully.");
+                System.out.println("Account Deleted Successfully");
                 deletedOK = true;
             }
 
@@ -149,13 +167,15 @@ public class UserDetails {
     }
 
      public static boolean updateUserDetailsInDatabase(int userId, String userLoginPin, String userLogin, String holder, boolean active) {
+        int accountId;
+
         String updateUserQuery = "UPDATE users SET user_login_pin = ?, user_login = ?, holder = ? WHERE id = ?";
         String updateAccountQuery = "UPDATE accounts SET active = ? WHERE user_id = ?";
         boolean updateOkay = false;
 
         try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
              PreparedStatement userStmt = conn.prepareStatement(updateUserQuery);
-             PreparedStatement accountStmt = conn.prepareStatement(updateAccountQuery)) {
+             PreparedStatement accountStmt = conn.prepareStatement(updateAccountQuery,Statement.RETURN_GENERATED_KEYS)) {
 
             // Update user details
             userStmt.setString(1, userLoginPin);
@@ -171,6 +191,12 @@ public class UserDetails {
 
             if (userUpdatedRows > 0 || accountUpdatedRows > 0) {
                 System.out.println("User details updated successfully.");
+                System.out.println("*********************************");
+                System.out.println("Holder: " + holder);
+                System.out.println("Login: " + userLogin);
+                System.out.println("Pin Code: " + userLoginPin);
+                System.out.println("Status: " + active);
+                System.out.println("*********************************");
                 updateOkay = true;
             } else {
                 System.out.println("No changes were made.");
@@ -366,5 +392,34 @@ public class UserDetails {
         return null;
     }
 }
+    public static void searchAccount(int accountId) {
+        String searchAccountQuery = "SELECT users.holder, accounts.id " +
+                                    "FROM users " +
+                                    "JOIN accounts ON users.id = accounts.user_id " +
+                                    "WHERE accounts.id = ?";
+
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
+             PreparedStatement stmtSearchAccount = conn.prepareStatement(searchAccountQuery)) {
+
+            // Set parameter for the query
+            stmtSearchAccount.setInt(1, accountId);
+
+            // Execute the query
+            ResultSet rs = stmtSearchAccount.executeQuery();
+
+            // Check if an account is found
+            if (rs.next()) {
+                String holderName = rs.getString("holder");
+                int accountIdFound = rs.getInt("id");
+                System.out.println("The account information is:");
+                System.out.println("Account #" + accountIdFound);
+                System.out.println("Holder: " + holderName);
+            } else {
+                System.out.println("No account found with the specified ID.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

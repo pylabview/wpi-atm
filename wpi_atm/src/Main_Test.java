@@ -6,11 +6,11 @@ import java.util.Map;
 public class Main_Test {
     public static void main(String[] args) {
         // Retrieve user data from the database
-//        UserDetails.addUserToDatabase("Marcos Villalva", "67896", "marcoV1234", 1200);
+//        UserDetails.addUserToDatabase("Marcos Villalva", "67896", "marcoV1234", 1200,1);
 //
-//        UserDetails.deleteUserFromDatabase(4);
+//        UserDetails.deleteUserFromDatabase(11);
 
-//        UserDetails.updateUserDetailsInDatabase(2, "67891", "rod1996", "Rodrigo", true);
+        UserDetails.updateUserDetailsInDatabase(2, "67891", "rod1996", "Rodrigo", true);
 
 
 
