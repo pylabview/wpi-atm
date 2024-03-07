@@ -26,9 +26,9 @@ public class Main {
             System.out.println("User Login Pin: " + user.getUserLoginPin());
             System.out.println();
         }
+        double currentBalance = UserDetails.getBalanceFromDatabase(2);
+//        UserDetails.withdrawFromAccount(2, 100, currentBalance);
+//        UserDetails.depositToAccount(2, 150.2, currentBalance);
 //        UserDetails.getBalanceFromDatabase(2);
-//        UserDetails.withdrawFromAccount(2, 100.0);
-        UserDetails.depositToAccount(2, 100.0);
-        UserDetails.getBalanceFromDatabase(2);
     }
 }

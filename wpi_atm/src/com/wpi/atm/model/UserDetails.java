@@ -180,7 +180,8 @@ public class UserDetails {
         return updateOkay;
     }
 
-    public static void getBalanceFromDatabase(int userId) {
+    public static double getBalanceFromDatabase(int userId) {
+        double balance = 0.0;
         // Query to set the current timestamp
         String setTimestampQuery = "SET @now = CURRENT_TIMESTAMP()";
 
@@ -204,15 +205,16 @@ public class UserDetails {
             ResultSet rs = stmtSelect.executeQuery();
 
             if (rs.next()) {
-                int balance = rs.getInt("balance");
+                balance = rs.getInt("balance");
                 int accountNumber = rs.getInt("account_number");
                 String holder = rs.getString("holder");
                 String timeStamp = rs.getString("time_stamp");
-
+                System.out.println("*********************************");
                 System.out.println("Balance: " + balance);
                 System.out.println("Account Number: " + accountNumber);
                 System.out.println("Holder: " + holder);
                 System.out.println("Timestamp: " + timeStamp);
+                System.out.println("*********************************");
             } else {
                 System.out.println("No balance found for user with ID " + userId);
             }
@@ -220,13 +222,10 @@ public class UserDetails {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return balance;
     }
 
      public static void withdrawFromAccount(int userId, double amount, double currentBalance) {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/your_database";
-        String username = "your_username";
-        String password = "your_password";
-
         // Query to update user's balance for withdrawal
         String updateWithdrawBalanceQuery = "UPDATE accounts SET balance = balance - ? WHERE user_id = ?";
 
@@ -260,18 +259,24 @@ public class UserDetails {
             stmtLinkWithdrawalTransaction.executeUpdate();
 
             // Display withdrawal details
+            System.out.println("*********************************");
+            System.out.println("Account #" + userId);
+            System.out.println("Date: " + "01/29/2024"); // Assuming a static date for this example
+            System.out.println("Withdrawn: " + amount);
+            System.out.println("Balance: " + (currentBalance - amount));
             System.out.println("Cash Successfully Withdrawn");
             System.out.println("Account #" + userId);
             System.out.println("Date: " + "01/29/2024"); // Assuming a static date for this example
             System.out.println("Withdrawn: " + amount);
             System.out.println("Balance: " + (currentBalance - amount));
+            System.out.println("*********************************");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-        public static void depositToAccount(int userId, double amount) {
+    public static void depositToAccount(int userId, double amount, double currentBalance) {
         // Query to update user's balance for deposit
         String updateDepositBalanceQuery = "UPDATE accounts SET balance = balance + ? WHERE user_id = ?";
 
@@ -299,7 +304,14 @@ public class UserDetails {
             stmtLinkDepositTransaction.setInt(1, userId);
             stmtLinkDepositTransaction.executeUpdate();
 
-            System.out.println("Deposit successful.");
+            // Display deposit details
+            System.out.println("*********************************");
+            System.out.println("Cash Deposited Successfully.");
+            System.out.println("Account #" + userId);
+            System.out.println("Date: " + "01/29/2024"); // Assuming a static date for this example
+            System.out.println("Deposited: " + amount);
+            System.out.println("Balance: " + (currentBalance + amount));
+            System.out.println("*********************************");
 
         } catch (SQLException e) {
             e.printStackTrace();
