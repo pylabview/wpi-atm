@@ -87,11 +87,11 @@ public class ATMSystem {
     System.out.print("Holder's Name: ");
     String holderName = scanner.nextLine();
     System.out.print("Starting Balance: ");
-    double startingBalance = scanner.nextDouble();
+    String startingBalance = scanner.nextLine();
     System.out.print("Status (Active/Inactive): ");
     String status = scanner.next();
 
-    UserDetails.addUserToDatabase(holderName, pinCode, login, startingBalance, Integer.parseInt(status));
+    UserDetails.addUserToDatabase(holderName, pinCode, login, Double.valueOf(startingBalance), Integer.parseInt(status));
 
 }
 

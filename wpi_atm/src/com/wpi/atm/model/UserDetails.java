@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UserDetails {
+
     private final int id;
     private final String holder, roleDescription, userLogin, userLoginPin;
     private int balance;
@@ -91,7 +92,8 @@ public class UserDetails {
     }
 
      public static boolean addUserToDatabase(String holder, String userLoginPin, String userLogin, double balance, int status) {
-        int accountId;
+         double balance1 = balance;
+         int accountId;
         try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password);
              Statement stmt = conn.createStatement()) {
 
@@ -114,7 +116,7 @@ public class UserDetails {
 
             // Execute SQL query to insert user account
             String insertAccountQuery = "INSERT INTO accounts (user_id, balance, active) " +
-                    "VALUES (" + userId + ", balance, 1);";
+                    "VALUES (" + userId + " , " + balance1 + ",1);";
             // Create a PreparedStatement with the INSERT query and specify that you want to retrieve generated keys
             PreparedStatement stmt1 = conn.prepareStatement(insertAccountQuery, Statement.RETURN_GENERATED_KEYS);
 
