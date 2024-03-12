@@ -15,7 +15,9 @@ database and the program is a console application (not a web app).
 
 #### Demo
 
-<video src="./demo.mp4"></video>
+
+
+https://github.com/pylabview/wpi-atm/assets/10331344/573a6eb4-efc1-4d4c-bfaa-2bde3d1fe859
 
 
 
